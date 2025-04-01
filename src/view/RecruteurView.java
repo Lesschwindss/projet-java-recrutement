@@ -1,9 +1,9 @@
 // === view/RecruteurView.java ===
 package view;
-import main.Main;
+
+import controller.RecruteurController;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class RecruteurView extends JPanel {
     public RecruteurView() {
@@ -15,8 +15,11 @@ public class RecruteurView extends JPanel {
         JButton btnVoirStats = new JButton("Voir les statistiques");
         JButton btnDeconnexion = new JButton("Déconnexion");
 
-        btnDeconnexion.addActionListener((ActionEvent e) -> Main.showLoginView());
-        btnVoirStats.addActionListener((ActionEvent e) -> Main.showReportingView());
+        btnAjouterOffre.addActionListener(e -> RecruteurController.ajouterOffre());
+        btnModifierOffre.addActionListener(e -> RecruteurController.modifierOffre());
+        btnSupprimerOffre.addActionListener(e -> RecruteurController.supprimerOffre());
+        btnVoirStats.addActionListener(e -> RecruteurController.voirStatistiques());
+        btnDeconnexion.addActionListener(e -> RecruteurController.logout());
 
         add(btnAjouterOffre);
         add(btnModifierOffre);

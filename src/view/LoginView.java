@@ -1,10 +1,10 @@
 // === view/LoginView.java ===
 package view;
 
+import controller.AuthController;
 import main.Main;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class LoginView extends JPanel {
     public LoginView() {
@@ -23,14 +23,7 @@ public class LoginView extends JPanel {
         add(passwordLabel); add(passwordField);
         add(loginButton); add(goToRegister);
 
-        loginButton.addActionListener((ActionEvent e) -> {
-            if(emailField.getText().contains("recruteur")){
-                Main.goToDashboard("Recruteur");
-            } else {
-                Main.goToDashboard("Candidat");
-            }
-        });
-
-        goToRegister.addActionListener((ActionEvent e) -> Main.showRegisterView());
+        loginButton.addActionListener(e -> AuthController.login(emailField.getText(), new String(passwordField.getPassword())));
+        goToRegister.addActionListener(e -> Main.showRegisterView());
     }
 }

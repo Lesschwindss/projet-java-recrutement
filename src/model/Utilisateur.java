@@ -4,11 +4,14 @@ public class Utilisateur {
     private int id;
     private String email;
     private String motDePasse;
+    private String nom;
+    private String prenom;
     private String type; // "Candidat" ou "Recruteur"
 
     // Constructeurs
-    public Utilisateur(int id, String email, String motDePasse, String type) {
-        this.id = id;
+    public Utilisateur(String nom, String prenom, String email, String motDePasse, String type) {
+        this.nom = nom;
+        this.prenom = prenom;
         this.email = email;
         this.motDePasse = motDePasse;
         this.type = type;

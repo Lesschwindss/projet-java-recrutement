@@ -1,9 +1,9 @@
 // === view/CandidatView.java ===
 package view;
-import main.Main;
+
+import controller.CandidatController;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class CandidatView extends JPanel {
     public CandidatView() {
@@ -13,7 +13,9 @@ public class CandidatView extends JPanel {
         JButton btnConsulterHistorique = new JButton("Consulter l'historique");
         JButton btnDeconnexion = new JButton("Déconnexion");
 
-        btnDeconnexion.addActionListener((ActionEvent e) -> Main.showLoginView());
+        btnConsulterOffres.addActionListener(e -> CandidatController.showOffres());
+        btnConsulterHistorique.addActionListener(e -> CandidatController.showHistorique());
+        btnDeconnexion.addActionListener(e -> CandidatController.logout());
 
         add(btnConsulterOffres);
         add(btnConsulterHistorique);
