@@ -1,3 +1,5 @@
+package model;
+
 public class Candidat {
     private int id;
     private String nom;

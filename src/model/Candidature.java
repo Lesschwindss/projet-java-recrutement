@@ -1,3 +1,5 @@
+package model;
+
 public class Candidature {
     private int id;
     private int idCandidat;

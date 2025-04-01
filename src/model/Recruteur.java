@@ -1,3 +1,5 @@
+package model;
+
 public class Recruteur {
     private int id;
     private String nom;
