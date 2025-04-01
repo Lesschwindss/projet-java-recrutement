@@ -1,5 +1,6 @@
 package dao;
-
+import model.Candidat;
+import utils.JDBCConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

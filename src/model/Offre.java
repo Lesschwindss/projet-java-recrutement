@@ -6,14 +6,16 @@ public class Offre {
     private String description;
     private String competencesRequises;
     private String statut;
+    private int recruteurId; // Assurez-vous que cet attribut est présent
 
-    // Constructeurs
-    public Offre(int id, String titre, String description, String competencesRequises, String statut) {
+    // Constructeur
+    public Offre(int id, String titre, String description, String competencesRequises, String statut, int recruteurId) {
         this.id = id;
         this.titre = titre;
         this.description = description;
         this.competencesRequises = competencesRequises;
         this.statut = statut;
+        this.recruteurId = recruteurId;
     }
 
     // Getters et Setters
@@ -55,5 +57,14 @@ public class Offre {
 
     public void setStatut(String statut) {
         this.statut = statut;
+    }
+
+    // Getter pour recruteurId
+    public int getRecruteurId() {
+        return recruteurId;
+    }
+
+    public void setRecruteurId(int recruteurId) {
+        this.recruteurId = recruteurId;
     }
 }
