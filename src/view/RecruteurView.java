@@ -1,45 +1,27 @@
-// Implémentation
+// === view/RecruteurView.java ===
 package view;
-
+import main.Main;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class RecruteurView extends JPanel {
+    public RecruteurView() {
+        setLayout(new GridLayout(5,1,10,10));
 
-    public RecruteurView(JFrame parentFrame) {
-        setLayout(new BorderLayout(10, 10));
-
-        JLabel title = new JLabel("Espace Recruteur", JLabel.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 18));
-
-        // Zone centrale : gestion des offres
-        JPanel centerPanel = new JPanel(new GridLayout(0, 1, 5, 5));
         JButton btnAjouterOffre = new JButton("Ajouter une offre");
         JButton btnModifierOffre = new JButton("Modifier une offre");
         JButton btnSupprimerOffre = new JButton("Supprimer une offre");
-        JButton btnConsulterCandidatures = new JButton("Consulter les candidatures");
         JButton btnVoirStats = new JButton("Voir les statistiques");
-
-        centerPanel.add(btnAjouterOffre);
-        centerPanel.add(btnModifierOffre);
-        centerPanel.add(btnSupprimerOffre);
-        centerPanel.add(btnConsulterCandidatures);
-        centerPanel.add(btnVoirStats);
-
-        // Zone bas : bouton de déconnexion
-        JPanel bottomPanel = new JPanel();
         JButton btnDeconnexion = new JButton("Déconnexion");
 
-        btnDeconnexion.addActionListener((ActionEvent e) -> {
-            parentFrame.setContentPane(new LoginView(parentFrame));
-            parentFrame.revalidate();
-        });
+        btnDeconnexion.addActionListener((ActionEvent e) -> Main.showLoginView());
+        btnVoirStats.addActionListener((ActionEvent e) -> Main.showReportingView());
 
-        bottomPanel.add(btnDeconnexion);
-
-        add(title, BorderLayout.NORTH);
-        add(centerPanel, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
+        add(btnAjouterOffre);
+        add(btnModifierOffre);
+        add(btnSupprimerOffre);
+        add(btnVoirStats);
+        add(btnDeconnexion);
     }
 }

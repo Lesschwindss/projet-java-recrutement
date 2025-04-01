@@ -1,21 +1,22 @@
-// Implémentation
+// === view/CandidatView.java ===
 package view;
-
+import main.Main;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class CandidatView extends JPanel {
+    public CandidatView() {
+        setLayout(new GridLayout(3,1,10,10));
 
-    public CandidatView(JFrame parentFrame) {
-        setLayout(new BorderLayout());
+        JButton btnConsulterOffres = new JButton("Consulter les offres");
+        JButton btnConsulterHistorique = new JButton("Consulter l'historique");
+        JButton btnDeconnexion = new JButton("Déconnexion");
 
-        JLabel title = new JLabel("Espace Candidat", SwingConstants.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 20));
+        btnDeconnexion.addActionListener((ActionEvent e) -> Main.showLoginView());
 
-        JTextArea area = new JTextArea();
-        area.setText("Bienvenue dans l’espace candidat !\n\nFonctionnalités à ajouter :\n- Parcourir les offres\n- Postuler\n- Historique");
-
-        add(title, BorderLayout.NORTH);
-        add(new JScrollPane(area), BorderLayout.CENTER);
+        add(btnConsulterOffres);
+        add(btnConsulterHistorique);
+        add(btnDeconnexion);
     }
 }
