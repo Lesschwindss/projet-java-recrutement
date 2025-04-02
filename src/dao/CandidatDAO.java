@@ -15,8 +15,9 @@ public class CandidatDAO {
      * @param candidat L'objet Candidat à ajouter
      * @throws SQLException
      */
-    public void ajouterCandidat(Candidat candidat) throws SQLException {
+    public static boolean ajouterCandidat(Candidat candidat) {
         String query = "INSERT INTO Candidat (nom, email, motDePasse, competences, experience) VALUES (?, ?, ?, ?, ?)";
+
         try (Connection connection = JDBCConnection.connect();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
@@ -25,9 +26,15 @@ public class CandidatDAO {
             statement.setString(3, candidat.getMotDePasse());
             statement.setString(4, candidat.getCompetences());
             statement.setString(5, candidat.getExperience());
-            statement.executeUpdate();
+
+            int rows = statement.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println("Erreur dans ajouterCandidat : " + e.getMessage());
+            return false;
         }
     }
+
 
     /**
      * Récupère tous les candidats de la base de données
@@ -56,4 +63,30 @@ public class CandidatDAO {
         }
         return candidats;
     }
-}
+    public static Candidat auth(String email, String password) {
+            try (Connection conn = JDBCConnection.connect()) {
+                String sql = "SELECT * FROM Candidat WHERE email = ? AND motDePasse = ?";
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setString(1, email);
+                    stmt.setString(2, password);
+
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            return new Candidat(
+                                    rs.getInt("id"),
+                                    rs.getString("nom"),
+                                    rs.getString("email"),
+                                    rs.getString("motDePasse"),
+                                    rs.getString("competences"),
+                                    rs.getString("experience")
+                            );
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println("Erreur dans CandidatDAO.auth : " + e.getMessage());
+            }
+            return null;
+        }
+    }
+

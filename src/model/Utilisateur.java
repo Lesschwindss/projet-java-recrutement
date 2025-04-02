@@ -49,4 +49,9 @@ public class Utilisateur {
     public void setType(String type) {
         this.type = type;
     }
+
+    public String getNom() {
+        return nom;
+    }
+
 }

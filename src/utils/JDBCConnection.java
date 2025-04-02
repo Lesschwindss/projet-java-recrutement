@@ -17,7 +17,7 @@ public class JDBCConnection {
         String password;
 
         if (os.contains("win")) {
-            // 🪟 Configuration pour WAMP sous Windows
+            // Configuration pour WAMP sous Windows
             System.out.println("Système détecté : Windows (WAMP)");
             url = "jdbc:mysql://localhost:3306/Recrutement?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
             user = "root";
