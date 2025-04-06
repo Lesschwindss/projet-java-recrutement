@@ -6,10 +6,6 @@ import java.sql.SQLException;
 
 public class JDBCConnection {
 
-    /**
-     * Méthode pour établir une connexion à la base de données
-     * avec détection automatique de l'OS (macOS ou Windows uniquement)
-     */
     public static Connection connect() throws SQLException {
         String os = System.getProperty("os.name").toLowerCase();
         String url;

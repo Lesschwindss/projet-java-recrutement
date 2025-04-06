@@ -11,7 +11,7 @@ public class ReportingView extends JPanel {
 
         add(new JLabel("[Graphiques générés ici avec JFreeChart]", JLabel.CENTER), BorderLayout.CENTER);
         JButton btnRetour = new JButton("Retour");
-        btnRetour.addActionListener(e -> Main.goToDashboard("Recruteur"));
+        btnRetour.addActionListener(e -> Main.goToDashboard("Recruteur", Main.recruteurConnecte));
         add(btnRetour, BorderLayout.SOUTH);
     }
 }
