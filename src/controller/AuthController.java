@@ -38,6 +38,7 @@ public class AuthController {
         if (Utilisateur.getType().equalsIgnoreCase("Candidat")) {
             Candidat c = new Candidat(0, Utilisateur.getNom(), Utilisateur.getEmail(), Utilisateur.getMotDePasse(), "", "");
             success = dao.CandidatDAO.ajouterCandidat(c);
+
         } else if (Utilisateur.getType().equalsIgnoreCase("Recruteur")) {
             Recruteur r = new Recruteur(0, Utilisateur.getNom(), Utilisateur.getEmail(), Utilisateur.getMotDePasse());
             success = dao.RecruteurDAO.ajouterRecruteur(r);
