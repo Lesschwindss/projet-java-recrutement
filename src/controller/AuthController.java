@@ -15,9 +15,10 @@ public class AuthController {
         Candidat candidat = CandidatDAO.auth(email, password);
         if (candidat != null) {
             System.out.println("Candidat connecté : " + candidat.getNom());
-            Main.goToDashboard("Candidat", null); // <- on passe null côté recruteur
+            Main.goToDashboard("Candidat", candidat); // ✔️ on passe bien le candidat maintenant
             return;
         }
+
 
         // Vérification côté Recruteur
         Recruteur recruteur = RecruteurDAO.auth(email, password);

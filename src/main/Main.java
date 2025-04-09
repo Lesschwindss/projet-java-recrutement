@@ -2,6 +2,8 @@ package main;
 
 import view.*;
 import model.Recruteur;
+import model.Candidat;
+import model.Recruteur;
 
 import javax.swing.*;
 
@@ -37,11 +39,12 @@ public class Main {
      * Redirection vers le dashboard selon le type utilisateur
      * et stockage du recruteur si applicable
      */
-    public static void goToDashboard(String userType, Recruteur recruteur) {
+    public static void goToDashboard(String userType, Object user) {
         if (userType.equalsIgnoreCase("Candidat")) {
-            frame.setContentPane(new CandidatView());
+            model.Candidat candidat = (model.Candidat) user;
+            frame.setContentPane(new view.CandidatView(candidat.getId()));
         } else if (userType.equalsIgnoreCase("Recruteur")) {
-            recruteurConnecte = recruteur; // ✅ stocke le recruteur connecté
+            recruteurConnecte = (Recruteur) user;
             frame.setContentPane(new RecruteurView());
         }
         frame.revalidate();
