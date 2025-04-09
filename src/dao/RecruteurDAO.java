@@ -32,7 +32,7 @@ public class RecruteurDAO {
             return false;
         }
     }
-
+  
 
     /**
      * Récupère tous les recruteurs de la base de données

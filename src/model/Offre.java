@@ -6,7 +6,7 @@ public class Offre {
     private String description;
     private String competencesRequises;
     private String statut;
-    private int recruteurId; // Assurez-vous que cet attribut est présent
+    private int recruteurId; // Ce nom correspond bien à ta BDD
 
     // Constructeur
     public Offre(int id, String titre, String description, String competencesRequises, String statut, int recruteurId) {
@@ -59,12 +59,17 @@ public class Offre {
         this.statut = statut;
     }
 
-    // Getter pour recruteurId
     public int getRecruteurId() {
         return recruteurId;
     }
 
     public void setRecruteurId(int recruteurId) {
         this.recruteurId = recruteurId;
+    }
+
+    // Méthode pour affichage lisible dans JComboBox ou JList
+    @Override
+    public String toString() {
+        return titre;
     }
 }
