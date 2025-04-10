@@ -7,7 +7,6 @@ import model.Candidat;
 import model.Recruteur;
 import model.Utilisateur;
 
-
 public class AuthController {
 
     public static void login(String email, String password) {
@@ -18,7 +17,6 @@ public class AuthController {
             Main.goToDashboard("Candidat", candidat); // ✔️ on passe bien le candidat maintenant
             return;
         }
-
 
         // Vérification côté Recruteur
         Recruteur recruteur = RecruteurDAO.auth(email, password);
@@ -33,16 +31,27 @@ public class AuthController {
         Main.showLoginView();
     }
 
-    public static void register(Utilisateur Utilisateur) {
+    public static void register(Utilisateur utilisateur) {
         boolean success = false;
 
-        if (Utilisateur.getType().equalsIgnoreCase("Candidat")) {
-            Candidat c = new Candidat(0, Utilisateur.getNom(), Utilisateur.getEmail(), Utilisateur.getMotDePasse(), "", "");
-            success = dao.CandidatDAO.ajouterCandidat(c);
+        if (utilisateur.getType().equalsIgnoreCase("Candidat")) {
+            // Assurez-vous de fournir des valeurs pour les nouveaux attributs
+            Candidat c = new Candidat(
+                    0,
+                    utilisateur.getNom(),
+                    utilisateur.getEmail(),
+                    utilisateur.getMotDePasse(),
+                    "", // competences
+                    "", // experience
+                    true, // sexe (vous pouvez ajuster selon vos besoins)
+                    "Nord", // region (vous pouvez ajuster selon vos besoins)
+                    "18-30" // trancheAge (vous pouvez ajuster selon vos besoins)
+            );
+            success = CandidatDAO.ajouterCandidat(c);
 
-        } else if (Utilisateur.getType().equalsIgnoreCase("Recruteur")) {
-            Recruteur r = new Recruteur(0, Utilisateur.getNom(), Utilisateur.getEmail(), Utilisateur.getMotDePasse());
-            success = dao.RecruteurDAO.ajouterRecruteur(r);
+        } else if (utilisateur.getType().equalsIgnoreCase("Recruteur")) {
+            Recruteur r = new Recruteur(0, utilisateur.getNom(), utilisateur.getEmail(), utilisateur.getMotDePasse());
+            success = RecruteurDAO.ajouterRecruteur(r);
         }
 
         if (success) {
@@ -53,5 +62,4 @@ public class AuthController {
 
         Main.showLoginView();
     }
-
 }

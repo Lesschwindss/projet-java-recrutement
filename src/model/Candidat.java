@@ -7,15 +7,21 @@ public class Candidat {
     private String motDePasse;
     private String competences;
     private String experience;
+    private Boolean sexe;
+    private String region;
+    private String trancheAge;
 
-    // Constructeurs
-    public Candidat(int id, String nom, String email, String motDePasse, String competences, String experience) {
+    // Constructeur
+    public Candidat(int id, String nom, String email, String motDePasse, String competences, String experience, Boolean sexe, String region, String trancheAge) {
         this.id = id;
         this.nom = nom;
         this.email = email;
         this.motDePasse = motDePasse;
         this.competences = competences;
         this.experience = experience;
+        this.sexe = sexe;
+        this.region = region;
+        this.trancheAge = trancheAge;
     }
 
     // Getters et Setters
@@ -65,5 +71,29 @@ public class Candidat {
 
     public void setExperience(String experience) {
         this.experience = experience;
+    }
+
+    public Boolean getSexe() {
+        return sexe;
+    }
+
+    public void setSexe(Boolean sexe) {
+        this.sexe = sexe;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getTrancheAge() {
+        return trancheAge;
+    }
+
+    public void setTrancheAge(String trancheAge) {
+        this.trancheAge = trancheAge;
     }
 }
