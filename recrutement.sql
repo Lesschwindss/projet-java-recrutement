@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Hôte : 127.0.0.1:3306
--- Généré le : mer. 02 avr. 2025 à 07:17
--- Version du serveur : 8.2.0
--- Version de PHP : 8.2.13
+-- Hôte : localhost:8889
+-- Généré le : jeu. 10 avr. 2025 à 14:48
+-- Version du serveur : 8.0.40
+-- Version de PHP : 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,17 +27,25 @@ SET time_zone = "+00:00";
 -- Structure de la table `candidat`
 --
 
-DROP TABLE IF EXISTS `candidat`;
-CREATE TABLE IF NOT EXISTS `candidat` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `candidat` (
+  `id` int NOT NULL,
   `nom` varchar(100) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `motDePasse` varchar(100) DEFAULT NULL,
   `competences` text,
   `experience` text,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
+  `sexe` tinyint(1) DEFAULT NULL,
+  `region` enum('Nord','Sud','Est','Ouest') DEFAULT NULL,
+  `trancheAge` enum('moins de 18','18-30','30-50','50+') DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `candidat`
+--
+
+INSERT INTO `candidat` (`id`, `nom`, `email`, `motDePasse`, `competences`, `experience`, `sexe`, `region`, `trancheAge`) VALUES
+(1, 'BD', 'julien', 'julien', '', '', NULL, NULL, NULL),
+(2, 'test2', 'test2', 'test2', '', '', 0, 'Sud', '30-50');
 
 -- --------------------------------------------------------
 
@@ -45,15 +53,11 @@ CREATE TABLE IF NOT EXISTS `candidat` (
 -- Structure de la table `candidature`
 --
 
-DROP TABLE IF EXISTS `candidature`;
-CREATE TABLE IF NOT EXISTS `candidature` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `candidature` (
+  `id` int NOT NULL,
   `idCandidat` int DEFAULT NULL,
   `idOffre` int DEFAULT NULL,
-  `statut` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idCandidat` (`idCandidat`),
-  KEY `idOffre` (`idOffre`)
+  `statut` varchar(50) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -62,16 +66,13 @@ CREATE TABLE IF NOT EXISTS `candidature` (
 -- Structure de la table `offre`
 --
 
-DROP TABLE IF EXISTS `offre`;
-CREATE TABLE IF NOT EXISTS `offre` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `offre` (
+  `id` int NOT NULL,
   `titre` varchar(255) DEFAULT NULL,
   `description` text,
   `competencesRequises` text,
   `statut` varchar(50) DEFAULT NULL,
-  `recruteurId` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `recruteurId` (`recruteurId`)
+  `recruteurId` int DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -80,14 +81,11 @@ CREATE TABLE IF NOT EXISTS `offre` (
 -- Structure de la table `recruteur`
 --
 
-DROP TABLE IF EXISTS `recruteur`;
-CREATE TABLE IF NOT EXISTS `recruteur` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `recruteur` (
+  `id` int NOT NULL,
   `nom` varchar(100) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `motDePasse` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
+  `motDePasse` varchar(100) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -96,17 +94,88 @@ CREATE TABLE IF NOT EXISTS `recruteur` (
 -- Structure de la table `utilisateur`
 --
 
-DROP TABLE IF EXISTS `utilisateur`;
-CREATE TABLE IF NOT EXISTS `utilisateur` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `utilisateur` (
+  `id` int NOT NULL,
   `email` varchar(100) NOT NULL,
   `motDePasse` varchar(100) NOT NULL,
   `nom` varchar(100) DEFAULT NULL,
   `prenom` varchar(100) DEFAULT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
+  `type` varchar(50) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `candidat`
+--
+ALTER TABLE `candidat`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Index pour la table `candidature`
+--
+ALTER TABLE `candidature`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idCandidat` (`idCandidat`),
+  ADD KEY `idOffre` (`idOffre`);
+
+--
+-- Index pour la table `offre`
+--
+ALTER TABLE `offre`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `recruteurId` (`recruteurId`);
+
+--
+-- Index pour la table `recruteur`
+--
+ALTER TABLE `recruteur`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Index pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `candidat`
+--
+ALTER TABLE `candidat`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT pour la table `candidature`
+--
+ALTER TABLE `candidature`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `offre`
+--
+ALTER TABLE `offre`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `recruteur`
+--
+ALTER TABLE `recruteur`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
