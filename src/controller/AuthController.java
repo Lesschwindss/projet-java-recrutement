@@ -31,11 +31,10 @@ public class AuthController {
         Main.showLoginView();
     }
 
-    public static void register(Utilisateur utilisateur) {
+    public static void register(Utilisateur utilisateur, Boolean sexe, String region, String trancheAge) {
         boolean success = false;
 
         if (utilisateur.getType().equalsIgnoreCase("Candidat")) {
-            // Assurez-vous de fournir des valeurs pour les nouveaux attributs
             Candidat c = new Candidat(
                     0,
                     utilisateur.getNom(),
@@ -43,9 +42,9 @@ public class AuthController {
                     utilisateur.getMotDePasse(),
                     "", // competences
                     "", // experience
-                    true, // sexe (vous pouvez ajuster selon vos besoins)
-                    "Nord", // region (vous pouvez ajuster selon vos besoins)
-                    "18-30" // trancheAge (vous pouvez ajuster selon vos besoins)
+                    sexe,
+                    region,
+                    trancheAge
             );
             success = CandidatDAO.ajouterCandidat(c);
 
