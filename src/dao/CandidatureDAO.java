@@ -9,52 +9,110 @@ import java.util.List;
 
 public class CandidatureDAO {
 
-    // Méthode pour postuler à une offre
-    public void postuler(int candidatId, int offreId) {
-        String query = "INSERT INTO candidature (idCandidat, idOffre, statut) VALUES (?, ?, ?)";
-        try (Connection conn = JDBCConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, candidatId);
-            stmt.setInt(2, offreId);
-            stmt.setString(3, "En attente");
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Méthode pour consulter l'historique des candidatures d'un candidat
-    public List<Candidature> consulterHistorique(int candidatId) {
+    // Retourne les candidatures avec leurs ID (modèle original)
+    public static List<Candidature> getToutesLesCandidatures() {
         List<Candidature> candidatures = new ArrayList<>();
-        String query = "SELECT * FROM candidature WHERE idCandidat = ?";
+
         try (Connection conn = JDBCConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, candidatId);
-            ResultSet rs = stmt.executeQuery();
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Candidature");
+             ResultSet rs = stmt.executeQuery()) {
+
             while (rs.next()) {
-                candidatures.add(new Candidature(
-                        rs.getInt("id"),
-                        rs.getInt("idCandidat"),
-                        rs.getInt("idOffre"),
-                        rs.getString("statut")
-                ));
+                int id = rs.getInt("id");
+                int idCandidat = rs.getInt("idCandidat");
+                int idOffre = rs.getInt("idOffre");
+                String statut = rs.getString("statut");
+
+                candidatures.add(new Candidature(id, idCandidat, idOffre, statut));
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return candidatures;
     }
 
-    // Méthode pour mettre à jour le statut de la candidature
-    public void mettreAJourStatut(int candidatureId, String statut) {
-        String query = "UPDATE candidature SET statut = ? WHERE id = ?";
+    // Accepter une candidature = mise à jour du statut
+    public static void updateStatut(int idCandidature, String nouveauStatut) {
         try (Connection conn = JDBCConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, statut);
-            stmt.setInt(2, candidatureId);
+             PreparedStatement stmt = conn.prepareStatement(
+                     "UPDATE Candidature SET statut = ? WHERE id = ?")) {
+
+            stmt.setString(1, nouveauStatut);
+            stmt.setInt(2, idCandidature);
             stmt.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    // Pour afficher un nom candidat depuis son ID
+    public static String getNomCandidat(int idCandidat) {
+        try (Connection conn = JDBCConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement("SELECT nom FROM Candidat WHERE id = ?")) {
+            stmt.setInt(1, idCandidat);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getString("nom");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Inconnu";
+    }
+
+    // Pour afficher un titre d’offre depuis son ID
+    public static String getTitreOffre(int idOffre) {
+        try (Connection conn = JDBCConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement("SELECT titre FROM Offre WHERE id = ?")) {
+            stmt.setInt(1, idOffre);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getString("titre");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Inconnue";
+    }
+    public static List<Candidature> consulterHistorique(int idCandidat) {
+        List<Candidature> candidatures = new ArrayList<>();
+
+        try (Connection conn = JDBCConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT * FROM Candidature WHERE idCandidat = ?")) {
+
+            stmt.setInt(1, idCandidat);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int idOffre = rs.getInt("idOffre");
+                String statut = rs.getString("statut");
+
+                candidatures.add(new Candidature(id, idCandidat, idOffre, statut));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return candidatures;
+    }
+    public static boolean postuler(int idCandidat, int idOffre) {
+        String sql = "INSERT INTO Candidature (idCandidat, idOffre, statut) VALUES (?, ?, 'en attente')";
+
+        try (Connection conn = JDBCConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idCandidat);
+            stmt.setInt(2, idOffre);
+            stmt.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
+

@@ -2,12 +2,12 @@ package dao;
 
 import model.Candidat;
 import utils.JDBCConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CandidatDAO {
 
@@ -103,5 +103,66 @@ public class CandidatDAO {
             System.err.println("Erreur dans CandidatDAO.auth : " + e.getMessage());
         }
         return null;
+    }
+
+    /**
+     * Statistique : nombre de candidats par genre (homme/femme)
+     */
+    public Map<String, Integer> getNombreCandidatsParGenre() {
+        Map<String, Integer> stats = new HashMap<>();
+        String query = "SELECT sexe, COUNT(*) as total FROM Candidat GROUP BY sexe";
+
+        try (Connection connection = JDBCConnection.connect();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                String genre = rs.getBoolean("sexe") ? "Homme" : "Femme";
+                stats.put(genre, rs.getInt("total"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur statistiques genre : " + e.getMessage());
+        }
+        return stats;
+    }
+
+    /**
+     * Statistique : nombre de candidats par tranche d'âge
+     */
+    public Map<String, Integer> getNombreCandidatsParTrancheAge() {
+        Map<String, Integer> stats = new HashMap<>();
+        String query = "SELECT trancheAge, COUNT(*) as total FROM Candidat GROUP BY trancheAge";
+
+        try (Connection connection = JDBCConnection.connect();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                stats.put(rs.getString("trancheAge"), rs.getInt("total"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur statistiques tranche d'âge : " + e.getMessage());
+        }
+        return stats;
+    }
+
+    /**
+     * Statistique : nombre de candidats par région
+     */
+    public Map<String, Integer> getNombreCandidatsParRegion() {
+        Map<String, Integer> stats = new HashMap<>();
+        String query = "SELECT region, COUNT(*) as total FROM Candidat GROUP BY region";
+
+        try (Connection connection = JDBCConnection.connect();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                stats.put(rs.getString("region"), rs.getInt("total"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur statistiques région : " + e.getMessage());
+        }
+        return stats;
     }
 }

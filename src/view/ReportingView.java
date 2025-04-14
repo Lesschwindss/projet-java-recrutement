@@ -1,17 +1,67 @@
-// === view/ReportingView.java ===
 package view;
 
-import main.Main;
+import dao.CandidatDAO;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 public class ReportingView extends JPanel {
+
     public ReportingView() {
         setLayout(new BorderLayout());
 
-        add(new JLabel("[Graphiques générés ici avec JFreeChart]", JLabel.CENTER), BorderLayout.CENTER);
+        JPanel graphPanel = new JPanel(new GridLayout(3, 1));
+
+        CandidatDAO dao = new CandidatDAO();
+
+        // Graphique 1 : Genre
+        Map<String, Integer> statsGenre = dao.getNombreCandidatsParGenre();
+        graphPanel.add(creerPanelGraphiqueCirculaire(statsGenre, "Répartition par Genre"));
+
+        // Graphique 2 : Tranche d’âge
+        Map<String, Integer> statsAge = dao.getNombreCandidatsParTrancheAge();
+        graphPanel.add(creerPanelGraphiqueColonnes(statsAge, "Répartition par Tranche d'Âge", "Tranche", "Nombre"));
+
+        // Graphique 3 : Région
+        Map<String, Integer> statsRegion = dao.getNombreCandidatsParRegion();
+        graphPanel.add(creerPanelGraphiqueColonnes(statsRegion, "Répartition par Région", "Région", "Nombre"));
+
+        add(graphPanel, BorderLayout.CENTER);
+
+        // Bouton Retour
         JButton btnRetour = new JButton("Retour");
-        btnRetour.addActionListener(e -> Main.goToDashboard("Recruteur", Main.recruteurConnecte));
-        add(btnRetour, BorderLayout.SOUTH);
+        btnRetour.addActionListener(e -> {
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            frame.setContentPane(new RecruteurView());  // Reviens à la vue classique sans parent
+            frame.revalidate();
+        });
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.add(btnRetour);
+        add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    private ChartPanel creerPanelGraphiqueCirculaire(Map<String, Integer> donnees, String titre) {
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        for (Map.Entry<String, Integer> entry : donnees.entrySet()) {
+            dataset.setValue(entry.getKey(), entry.getValue());
+        }
+        JFreeChart chart = ChartFactory.createPieChart(titre, dataset, true, true, false);
+        return new ChartPanel(chart);
+    }
+
+    private ChartPanel creerPanelGraphiqueColonnes(Map<String, Integer> donnees, String titre, String labelX, String labelY) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (Map.Entry<String, Integer> entry : donnees.entrySet()) {
+            dataset.addValue(entry.getValue(), "Candidats", entry.getKey());
+        }
+        JFreeChart chart = ChartFactory.createBarChart(titre, labelX, labelY, dataset);
+        return new ChartPanel(chart);
     }
 }
