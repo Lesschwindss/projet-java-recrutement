@@ -26,12 +26,11 @@ public class ReportingView extends JPanel {
 
         // Graphique 2 : Tranche d’âge
         Map<String, Integer> statsAge = dao.getNombreCandidatsParTrancheAge();
-        graphPanel.add(creerPanelGraphiqueColonnes(statsAge, "Répartition par Tranche d'Âge", "Tranche", "Nombre"));
+        graphPanel.add(creerPanelGraphiqueCirculaire(statsAge, "Répartition par Tranche d'Âge"));
 
         // Graphique 3 : Région
         Map<String, Integer> statsRegion = dao.getNombreCandidatsParRegion();
-        graphPanel.add(creerPanelGraphiqueColonnes(statsRegion, "Répartition par Région", "Région", "Nombre"));
-
+        graphPanel.add(creerPanelGraphiqueCirculaire(statsRegion, "Répartition par Région"));
         add(graphPanel, BorderLayout.CENTER);
 
         // Bouton Retour
@@ -53,15 +52,6 @@ public class ReportingView extends JPanel {
             dataset.setValue(entry.getKey(), entry.getValue());
         }
         JFreeChart chart = ChartFactory.createPieChart(titre, dataset, true, true, false);
-        return new ChartPanel(chart);
-    }
-
-    private ChartPanel creerPanelGraphiqueColonnes(Map<String, Integer> donnees, String titre, String labelX, String labelY) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        for (Map.Entry<String, Integer> entry : donnees.entrySet()) {
-            dataset.addValue(entry.getValue(), "Candidats", entry.getKey());
-        }
-        JFreeChart chart = ChartFactory.createBarChart(titre, labelX, labelY, dataset);
         return new ChartPanel(chart);
     }
 }
