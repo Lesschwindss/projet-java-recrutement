@@ -56,10 +56,6 @@ public class ReportingView extends JPanel {
             if (key != null && value != null) {
                 dataset.setValue(key, value);
             }
-            if (key == null || value == null) {
-                // Remplacer null par "Inconnu" ou ignorer selon tes besoins
-                dataset.setValue(key == null ? "Inconnu" : key, value != null ? value : 0);
-            }
         }
 
         JFreeChart chart = ChartFactory.createPieChart(titre, dataset, true, true, false);
