@@ -48,9 +48,19 @@ public class ReportingView extends JPanel {
 
     private ChartPanel creerPanelGraphiqueCirculaire(Map<String, Integer> donnees, String titre) {
         DefaultPieDataset dataset = new DefaultPieDataset();
+
         for (Map.Entry<String, Integer> entry : donnees.entrySet()) {
-            dataset.setValue(entry.getKey(), entry.getValue());
+            String key = entry.getKey();
+            Integer value = entry.getValue();
+
+            if (key != null && value != null) {
+                dataset.setValue(key, value);
+            } else {
+                // Remplacer null par "Inconnu" ou ignorer selon tes besoins
+                dataset.setValue(key == null ? "Inconnu" : key, value != null ? value : 0);
+            }
         }
+
         JFreeChart chart = ChartFactory.createPieChart(titre, dataset, true, true, false);
         return new ChartPanel(chart);
     }
