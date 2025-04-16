@@ -165,4 +165,46 @@ public class CandidatDAO {
         }
         return stats;
     }
+
+    public void modifierCandidat(Candidat candidat) {
+        String query = "UPDATE candidat SET nom = ?, motDePasse = ?, competences = ?, experience = ?, sexe = ?, region = ?, trancheAge = ? WHERE id = ?";
+        try (Connection conn = JDBCConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, candidat.getNom());
+            stmt.setString(2, candidat.getMotDePasse());
+            stmt.setString(3, candidat.getCompetences());
+            stmt.setString(4, candidat.getExperience());
+            stmt.setBoolean(5, candidat.getSexe());
+            stmt.setString(6, candidat.getRegion());
+            stmt.setString(7, candidat.getTrancheAge());
+            stmt.setInt(8, candidat.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Candidat getById(int id) {
+        try (Connection conn = JDBCConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM candidat WHERE id = ?")) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Candidat(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("email"),
+                        rs.getString("motDePasse"),
+                        rs.getString("competences"),
+                        rs.getString("experience"),
+                        rs.getBoolean("sexe"),
+                        rs.getString("region"),
+                        rs.getString("trancheAge")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

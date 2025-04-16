@@ -2,6 +2,8 @@
 package view;
 
 import controller.CandidatController;
+import model.*;
+import dao.*;
 import javax.swing.*;
 import java.awt.*;
 
@@ -24,6 +26,17 @@ public class CandidatView extends JPanel {
             topFrame.revalidate();
         });
         btnDeconnexion.addActionListener(e -> CandidatController.logout());
+
+        JButton btnModifierProfil = new JButton("Modifier mon profil");
+        btnModifierProfil.addActionListener(e -> {
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            CandidatDAO dao = new CandidatDAO();
+            Candidat candidat = dao.getById(candidatId); // à créer si elle n'existe pas
+            topFrame.setContentPane(new ModifierProfilCandidatView(candidat));
+            topFrame.revalidate();
+        });
+        add(btnModifierProfil);
+
 
         add(btnConsulterOffres);
         add(btnConsulterHistorique);

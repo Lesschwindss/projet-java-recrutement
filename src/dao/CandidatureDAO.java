@@ -97,22 +97,32 @@ public class CandidatureDAO {
 
         return candidatures;
     }
-    public static boolean postuler(int idCandidat, int idOffre) {
-        String sql = "INSERT INTO Candidature (idCandidat, idOffre, statut) VALUES (?, ?, 'en attente')";
 
+    public void postuler(int candidatId, int offreId, String lettreMotivation) {
+        String query = "INSERT INTO candidature (idCandidat, idOffre, statut, lettreMotivation) VALUES (?, ?, ?, ?)";
         try (Connection conn = JDBCConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, idCandidat);
-            stmt.setInt(2, idOffre);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, candidatId);
+            stmt.setInt(2, offreId);
+            stmt.setString(3, "En attente");
+            stmt.setString(4, lettreMotivation);
             stmt.executeUpdate();
-            return true;
-
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
+
+    public void supprimerCandidature(int id) {
+        String query = "DELETE FROM candidature WHERE id = ?";
+        try (Connection conn = JDBCConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
 

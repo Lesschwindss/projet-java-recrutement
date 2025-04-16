@@ -44,10 +44,9 @@ public class CandidatController {
         }
     }
 
-    public static void postulerAOffre(int idCandidat, int idOffre) {
-        CandidatureDAO candidatureDAO = new CandidatureDAO();
-        candidatureDAO.postuler(idCandidat, idOffre);
-        System.out.println("Candidature envoyée avec succès !");
+    public static void postulerAOffre(int idCandidat, int idOffre, String lettre) {
+        CandidatureDAO dao = new CandidatureDAO();
+        dao.postuler(idCandidat, idOffre, lettre);
     }
 
     public static List<Offre> getToutesLesOffres() {

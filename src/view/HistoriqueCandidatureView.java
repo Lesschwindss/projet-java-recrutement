@@ -2,7 +2,7 @@ package view;
 
 import controller.CandidatController;
 import model.Candidature;
-
+import dao.CandidatureDAO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -35,6 +35,39 @@ public class HistoriqueCandidatureView extends JPanel {
             topFrame.revalidate();
         });
 
-        add(btnRetour, BorderLayout.SOUTH);
+        JButton supprimerBtn = new JButton("Supprimer la candidature");
+        supprimerBtn.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                String statut = table.getValueAt(selectedRow, 1).toString();
+                int idOffre = (int) table.getValueAt(selectedRow, 0);
+
+                if (!statut.equalsIgnoreCase("En attente")) {
+                    JOptionPane.showMessageDialog(this, "Seules les candidatures 'En attente' peuvent être supprimées.");
+                    return;
+                }
+
+                CandidatureDAO dao = new CandidatureDAO();
+                List<Candidature> candidatures2 = CandidatController.getHistoriqueCandidatures(candidatId);
+                for (Candidature c : candidatures2) {
+                    if (c.getIdOffre() == idOffre && c.getStatut().equalsIgnoreCase("En attente")) {
+                        dao.supprimerCandidature(c.getId());
+                        JOptionPane.showMessageDialog(this, "Candidature supprimée.");
+                        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                        frame.setContentPane(new HistoriqueCandidatureView(candidatId));
+                        frame.revalidate();
+                        break;
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Sélectionnez une ligne.");
+            }
+        });
+
+        JPanel bas = new JPanel(new FlowLayout());
+        bas.add(supprimerBtn);
+        bas.add(btnRetour);
+        add(bas, BorderLayout.SOUTH);
+
     }
 }
