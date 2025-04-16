@@ -69,4 +69,15 @@ public class CandidatController {
     public static void logout() {
         Main.showLoginView();
     }
+
+    public static List<Offre> getToutesLesOffresAvecNbCandidatures() {
+        OffreDAO offreDAO = new OffreDAO();
+        try {
+            return offreDAO.obtenirOffresAvecNbCandidatures();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
 }

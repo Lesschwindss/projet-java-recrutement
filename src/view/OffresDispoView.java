@@ -17,14 +17,14 @@ public class OffresDispoView extends JPanel {
         titre.setHorizontalAlignment(SwingConstants.CENTER);
         add(titre, BorderLayout.NORTH);
 
-        String[] colonnes = {"ID", "Titre", "Description", "Compétences", "Statut", "Catégorie"};
+        String[] colonnes = {"ID", "Titre", "Description", "Compétences", "Statut", "Catégorie", "Nb Candidatures"};
         DefaultTableModel tableModel = new DefaultTableModel(colonnes, 0);
         JTable table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
         // Remplir la table
-        List<Offre> offres = controller.CandidatController.getToutesLesOffres();
+        List<Offre> offres = controller.CandidatController.getToutesLesOffresAvecNbCandidatures();
         for (Offre o : offres) {
             tableModel.addRow(new Object[]{
                     o.getId(),
@@ -32,9 +32,11 @@ public class OffresDispoView extends JPanel {
                     o.getDescription(),
                     o.getCompetencesRequises(),
                     o.getStatut(),
-                    o.getCategorie()
+                    o.getCategorie(),
+                    o.getNbCandidatures()
             });
         }
+
 
         JButton btnPostuler = new JButton("Postuler à l'offre sélectionnée");
         btnPostuler.addActionListener(e -> {

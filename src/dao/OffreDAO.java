@@ -130,4 +130,35 @@ public class OffreDAO {
 
         return offres;
     }
+
+    public List<Offre> obtenirOffresAvecNbCandidatures() throws SQLException {
+        List<Offre> offres = new ArrayList<>();
+        String query = """
+            SELECT o.*, COUNT(c.id) AS nbCandidatures
+            FROM offre o
+            LEFT JOIN Candidature c ON o.id = c.idOffre
+            GROUP BY o.id
+            """;
+
+        try (Connection connection = JDBCConnection.connect();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Offre offre = new Offre(
+                        resultSet.getInt("id"),
+                        resultSet.getString("titre"),
+                        resultSet.getString("description"),
+                        resultSet.getString("competencesRequises"),
+                        resultSet.getString("statut"),
+                        resultSet.getInt("recruteurId"),
+                        resultSet.getString("categorie")
+                );
+                offre.setNbCandidatures(resultSet.getInt("nbCandidatures"));
+                offres.add(offre);
+            }
+        }
+        return offres;
+    }
+
 }

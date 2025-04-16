@@ -7,6 +7,7 @@ public class Offre {
     private String competencesRequises;
     private String statut;
     private String categorie;
+    private int nbCandidatures;
     private int recruteurId; // Ce nom correspond bien à ta BDD
 
     // Constructeur
@@ -75,6 +76,14 @@ public class Offre {
 
     public void setCategorie(String categorie) {
         this.categorie = categorie;
+    }
+
+    public int getNbCandidatures() {
+        return nbCandidatures;
+    }
+
+    public void setNbCandidatures(int nbCandidatures) {
+        this.nbCandidatures = nbCandidatures;
     }
 
 
