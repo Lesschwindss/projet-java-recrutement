@@ -6,16 +6,18 @@ public class Offre {
     private String description;
     private String competencesRequises;
     private String statut;
+    private String categorie;
     private int recruteurId; // Ce nom correspond bien à ta BDD
 
     // Constructeur
-    public Offre(int id, String titre, String description, String competencesRequises, String statut, int recruteurId) {
+    public Offre(int id, String titre, String description, String competencesRequises, String statut, int recruteurId, String categorie) {
         this.id = id;
         this.titre = titre;
         this.description = description;
         this.competencesRequises = competencesRequises;
         this.statut = statut;
         this.recruteurId = recruteurId;
+        this.categorie = categorie;
     }
 
     // Getters et Setters
@@ -66,6 +68,15 @@ public class Offre {
     public void setRecruteurId(int recruteurId) {
         this.recruteurId = recruteurId;
     }
+
+    public String getCategorie() {
+        return categorie;
+    }
+
+    public void setCategorie(String categorie) {
+        this.categorie = categorie;
+    }
+
 
     // Méthode pour affichage lisible dans JComboBox ou JList
     @Override

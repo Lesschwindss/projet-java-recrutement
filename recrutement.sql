@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:8889
--- Généré le : jeu. 10 avr. 2025 à 14:48
+-- Généré le : mer. 16 avr. 2025 à 09:40
 -- Version du serveur : 8.0.40
 -- Version de PHP : 8.3.14
 
@@ -44,21 +44,38 @@ CREATE TABLE `candidat` (
 --
 
 INSERT INTO `candidat` (`id`, `nom`, `email`, `motDePasse`, `competences`, `experience`, `sexe`, `region`, `trancheAge`) VALUES
-(1, 'BD', 'julien', 'julien', '', '', NULL, NULL, NULL),
-(2, 'test2', 'test2', 'test2', '', '', 0, 'Sud', '30-50');
+(6, 'poiu', 'poiu', 'poiu', '', '', 0, 'Nord', 'moins de 18'),
+(2, 'test2', 'test2', 'test2', '', '', 0, 'Sud', '30-50'),
+(3, 'qsdf', 'qsdf', 'qsdf', '', '', 0, 'Sud', '18-30'),
+(4, 'fdsq', 'fdsq', 'fdsq', '', '', 1, 'Ouest', '50+'),
+(5, 'mlkj', 'mlkj', 'mlkj', '', '', 1, 'Ouest', '30-50');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `candidature`
+-- Structure de la table `Candidature`
 --
 
-CREATE TABLE `candidature` (
+CREATE TABLE `Candidature` (
   `id` int NOT NULL,
   `idCandidat` int DEFAULT NULL,
   `idOffre` int DEFAULT NULL,
-  `statut` varchar(50) DEFAULT NULL
+  `statut` varchar(50) DEFAULT NULL,
+  `lettreMotivation` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `Candidature`
+--
+
+INSERT INTO `Candidature` (`id`, `idCandidat`, `idOffre`, `statut`, `lettreMotivation`) VALUES
+(1, 1, 1, 'en attente', NULL),
+(2, 1, 1, 'en attente', NULL),
+(3, 1, 2, 'en attente', NULL),
+(4, 3, 1, 'en attente', NULL),
+(5, 4, 2, 'en attente', NULL),
+(6, 4, 1, 'en attente', NULL),
+(7, 3, 1, 'En attente', 'qsdfqsdf');
 
 -- --------------------------------------------------------
 
@@ -72,8 +89,19 @@ CREATE TABLE `offre` (
   `description` text,
   `competencesRequises` text,
   `statut` varchar(50) DEFAULT NULL,
-  `recruteurId` int DEFAULT NULL
+  `recruteurId` int DEFAULT NULL,
+  `categorie` enum('Direction','Ingénierie','Marketing','Finance','RH') DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `offre`
+--
+
+INSERT INTO `offre` (`id`, `titre`, `description`, `competencesRequises`, `statut`, `recruteurId`, `categorie`) VALUES
+(1, '', '', '', 'Ouvert', 2, NULL),
+(2, 'qsdfqsdf', 'qsdfqsdf', 'fdqsqsdf', 'Ouvert', 2, NULL),
+(3, '', '', '', 'Ouvert', 1, NULL),
+(4, 'qsdffdsq', 'qsdffdsq', 'qsdffdsq', 'Ouvert', 2, 'Marketing');
 
 -- --------------------------------------------------------
 
@@ -87,6 +115,14 @@ CREATE TABLE `recruteur` (
   `email` varchar(100) DEFAULT NULL,
   `motDePasse` varchar(100) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `recruteur`
+--
+
+INSERT INTO `recruteur` (`id`, `nom`, `email`, `motDePasse`) VALUES
+(1, 'julien', 'julien', 'julien'),
+(2, 'julien1', 'julien1', 'julien1');
 
 -- --------------------------------------------------------
 
@@ -115,9 +151,9 @@ ALTER TABLE `candidat`
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- Index pour la table `candidature`
+-- Index pour la table `Candidature`
 --
-ALTER TABLE `candidature`
+ALTER TABLE `Candidature`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idCandidat` (`idCandidat`),
   ADD KEY `idOffre` (`idOffre`);
@@ -151,25 +187,25 @@ ALTER TABLE `utilisateur`
 -- AUTO_INCREMENT pour la table `candidat`
 --
 ALTER TABLE `candidat`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT pour la table `candidature`
+-- AUTO_INCREMENT pour la table `Candidature`
 --
-ALTER TABLE `candidature`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+ALTER TABLE `Candidature`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT pour la table `offre`
 --
 ALTER TABLE `offre`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT pour la table `recruteur`
 --
 ALTER TABLE `recruteur`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT pour la table `utilisateur`

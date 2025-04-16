@@ -14,12 +14,15 @@ public class AjouterOffreForm extends JFrame {
         setSize(400, 300);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new GridLayout(6, 2, 10, 10));
+        setLayout(new GridLayout(7, 2, 10, 10));
 
         JTextField titreField = new JTextField();
         JTextField descriptionField = new JTextField();
         JTextField competencesField = new JTextField();
         JComboBox<String> statutBox = new JComboBox<>(new String[]{"Ouvert", "Fermé"});
+        JComboBox<String> categorieBox = new JComboBox<>(new String[]{
+                "Direction", "Ingénierie", "Marketing", "Finance", "RH"
+        });
 
         JButton btnValider = new JButton("Valider");
 
@@ -31,6 +34,8 @@ public class AjouterOffreForm extends JFrame {
         add(competencesField);
         add(new JLabel("Statut :"));
         add(statutBox);
+        add(new JLabel("Catégorie :"));
+        add(categorieBox);
         add(new JLabel(""));
         add(btnValider);
 
@@ -41,8 +46,10 @@ public class AjouterOffreForm extends JFrame {
                     descriptionField.getText(),
                     competencesField.getText(),
                     statutBox.getSelectedItem().toString(),
-                    recruteurId
+                    recruteurId,
+                    categorieBox.getSelectedItem().toString()
             );
+
 
             try {
                 new OffreDAO().ajouterOffre(offre);

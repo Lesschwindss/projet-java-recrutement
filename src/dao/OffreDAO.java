@@ -18,7 +18,7 @@ public class OffreDAO {
      * @throws SQLException
      */
     public void ajouterOffre(Offre offre) throws SQLException {
-        String query = "INSERT INTO offre (titre, description, competencesRequises, statut, recruteurId) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO offre (titre, description, competencesRequises, statut, recruteurId, categorie) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = JDBCConnection.connect();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
@@ -27,6 +27,7 @@ public class OffreDAO {
             statement.setString(3, offre.getCompetencesRequises());
             statement.setString(4, offre.getStatut());
             statement.setInt(5, offre.getRecruteurId());
+            statement.setString(6, offre.getCategorie());
             statement.executeUpdate();
         }
     }
@@ -85,7 +86,8 @@ public class OffreDAO {
                         resultSet.getString("description"),
                         resultSet.getString("competencesRequises"),
                         resultSet.getString("statut"),
-                        resultSet.getInt("recruteurId")
+                        resultSet.getInt("recruteurId"),
+                        resultSet.getString("categorie")
                 );
                 offres.add(offre);
             }
@@ -118,7 +120,8 @@ public class OffreDAO {
                             resultSet.getString("description"),
                             resultSet.getString("competencesRequises"),
                             resultSet.getString("statut"),
-                            resultSet.getInt("recruteurId")
+                            resultSet.getInt("recruteurId"),
+                            resultSet.getString("categorie")
                     );
                     offres.add(offre);
                 }

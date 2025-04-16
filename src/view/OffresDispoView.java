@@ -17,7 +17,7 @@ public class OffresDispoView extends JPanel {
         titre.setHorizontalAlignment(SwingConstants.CENTER);
         add(titre, BorderLayout.NORTH);
 
-        String[] colonnes = {"ID", "Titre", "Description", "Compétences", "Statut"};
+        String[] colonnes = {"ID", "Titre", "Description", "Compétences", "Statut", "Catégorie"};
         DefaultTableModel tableModel = new DefaultTableModel(colonnes, 0);
         JTable table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
@@ -31,7 +31,8 @@ public class OffresDispoView extends JPanel {
                     o.getTitre(),
                     o.getDescription(),
                     o.getCompetencesRequises(),
-                    o.getStatut()
+                    o.getStatut(),
+                    o.getCategorie()
             });
         }
 
