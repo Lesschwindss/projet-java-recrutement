@@ -32,6 +32,12 @@ public class CandidaturesView extends JPanel {
         JButton btnAccepter = new JButton("Accepter");
         btnAccepter.addActionListener(e -> accepterCandidature());
 
+        JButton btnRefuser = new JButton("Refusé");
+        btnRefuser.addActionListener(e -> refuserCandidature());
+
+        JButton btnVoirProfil = new JButton("Voir Profil");
+        btnVoirProfil.addActionListener(e -> voirProfil());
+
         JButton btnRetour = new JButton("Retour");
         btnRetour.addActionListener(e -> {
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
@@ -40,6 +46,8 @@ public class CandidaturesView extends JPanel {
         });
 
         bottomPanel.add(btnAccepter);
+        bottomPanel.add(btnRefuser);
+        bottomPanel.add(btnVoirProfil);
         bottomPanel.add(btnRetour);
         add(bottomPanel, BorderLayout.SOUTH);
     }
@@ -48,10 +56,37 @@ public class CandidaturesView extends JPanel {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
             Candidature candidature = tableModel.getCandidatureAt(selectedRow);
-            candidature.setStatut("acceptée");
-            CandidatureDAO.updateStatut(candidature.getId(), "acceptée");
+            candidature.setStatut("Acceptée");
+            CandidatureDAO.updateStatut(candidature.getId(), "Acceptée");
             JOptionPane.showMessageDialog(this, "Candidature acceptée !");
             tableModel.fireTableRowsUpdated(selectedRow, selectedRow);
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une candidature.");
+        }
+    }
+
+    private void refuserCandidature() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            Candidature candidature = tableModel.getCandidatureAt(selectedRow);
+            candidature.setStatut("Refusée");
+            CandidatureDAO.updateStatut(candidature.getId(), "Refusée");
+            JOptionPane.showMessageDialog(this, "Candidature refusée !");
+            tableModel.fireTableRowsUpdated(selectedRow, selectedRow);
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une candidature.");
+        }
+    }
+
+    private void voirProfil() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            Candidature candidature = tableModel.getCandidatureAt(selectedRow);
+            int idCandidat = candidature.getIdCandidat();
+            // Afficher une nouvelle fenêtre ou panneau avec les infos du profil candidat
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            frame.setContentPane(new ProfilCandidatView(idCandidat));
+            frame.revalidate();
         } else {
             JOptionPane.showMessageDialog(this, "Veuillez sélectionner une candidature.");
         }

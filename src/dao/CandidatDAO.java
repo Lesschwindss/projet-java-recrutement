@@ -184,7 +184,7 @@ public class CandidatDAO {
         }
     }
 
-    public Candidat getById(int id) {
+    public static Candidat getById(int id) {
         try (Connection conn = JDBCConnection.connect();
              PreparedStatement stmt = conn.prepareStatement("SELECT * FROM candidat WHERE id = ?")) {
             stmt.setInt(1, id);
