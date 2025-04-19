@@ -1,12 +1,12 @@
 package view;
 
 import controller.CandidatController;
+import model.Offre;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
-import model.Offre;
 
 public class OffresDispoView extends JPanel {
 
@@ -17,37 +17,50 @@ public class OffresDispoView extends JPanel {
         titre.setHorizontalAlignment(SwingConstants.CENTER);
         add(titre, BorderLayout.NORTH);
 
-        String[] colonnes = {"ID", "Titre", "Description", "Compétences", "Statut", "Catégorie", "Nb Candidatures"};
+        // --- Barre de filtre par catégorie ---
+        JComboBox<String> filtreCategorie = new JComboBox<>(new String[]{
+                "Toutes", "Direction", "Ingénierie", "Marketing", "Finance", "RH"
+        });
+        JPanel filtrePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        filtrePanel.add(new JLabel("Filtrer par catégorie :"));
+        filtrePanel.add(filtreCategorie);
+        add(filtrePanel, BorderLayout.BEFORE_FIRST_LINE);
+
+        // --- Table des offres ---
+        String[] colonnes = {"ID", "Titre", "Description", "Compétences", "Statut", "Catégorie"};
         DefaultTableModel tableModel = new DefaultTableModel(colonnes, 0);
         JTable table = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
+        add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // Remplir la table
-        List<Offre> offres = controller.CandidatController.getToutesLesOffresAvecNbCandidatures();
-        for (Offre o : offres) {
-            tableModel.addRow(new Object[]{
-                    o.getId(),
-                    o.getTitre(),
-                    o.getDescription(),
-                    o.getCompetencesRequises(),
-                    o.getStatut(),
-                    o.getCategorie(),
-                    o.getNbCandidatures()
-            });
-        }
+        List<Offre> toutesLesOffres = CandidatController.getToutesLesOffres();
 
+        Runnable rafraichirTable = () -> {
+            tableModel.setRowCount(0);
+            String selectedCategorie = (String) filtreCategorie.getSelectedItem();
+            for (Offre o : toutesLesOffres) {
+                if (selectedCategorie.equals("Toutes") ||
+                        (o.getCategorie() != null && o.getCategorie().equalsIgnoreCase(selectedCategorie))) {
+                    tableModel.addRow(new Object[]{
+                            o.getId(), o.getTitre(), o.getDescription(),
+                            o.getCompetencesRequises(), o.getStatut(), o.getCategorie()
+                    });
+                }
+            }
+        };
 
+        rafraichirTable.run(); // initial load
+        filtreCategorie.addActionListener(e -> rafraichirTable.run());
+
+        // --- Boutons Postuler et Retour ---
         JButton btnPostuler = new JButton("Postuler à l'offre sélectionnée");
         btnPostuler.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-            if (selectedRow != -1) {
-                int idOffre = (int) tableModel.getValueAt(selectedRow, 0);
+            int row = table.getSelectedRow();
+            if (row != -1) {
+                int idOffre = (int) tableModel.getValueAt(row, 0);
 
                 JTextArea lettreArea = new JTextArea(10, 30);
-                JScrollPane scrollPane2 = new JScrollPane(lettreArea);
-
-                int result = JOptionPane.showConfirmDialog(this, scrollPane2, "Votre lettre de motivation",
+                JScrollPane scrollPane = new JScrollPane(lettreArea);
+                int result = JOptionPane.showConfirmDialog(this, scrollPane, "Votre lettre de motivation",
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
                 if (result == JOptionPane.OK_OPTION) {
@@ -64,18 +77,16 @@ public class OffresDispoView extends JPanel {
             }
         });
 
-        JPanel bottomPanel = new JPanel(new FlowLayout());
-        bottomPanel.add(btnPostuler);
-
         JButton btnRetour = new JButton("Retour");
         btnRetour.addActionListener(e -> {
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.setContentPane(new CandidatView(candidatId));
             topFrame.revalidate();
         });
-        bottomPanel.add(btnRetour);
 
+        JPanel bottomPanel = new JPanel(new FlowLayout());
+        bottomPanel.add(btnPostuler);
+        bottomPanel.add(btnRetour);
         add(bottomPanel, BorderLayout.SOUTH);
     }
 }
-
