@@ -12,12 +12,11 @@ import java.util.Map;
 public class CandidatDAO {
 
     /**
-     * Ajoute un nouveau candidat à la base de données
-     * @param candidat L'objet Candidat à ajouter
-     * @return true si l'insertion a réussi, false sinon
+     * Ajoute un nouveau candidat à la base de données.
      */
     public static boolean ajouterCandidat(Candidat candidat) {
-        String query = "INSERT INTO Candidat (nom, email, motDePasse, competences, experience, sexe, region, trancheAge) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Candidat (nom, email, motDePasse, competences, experience, sexe, region, trancheAge) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = JDBCConnection.connect();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -33,6 +32,7 @@ public class CandidatDAO {
 
             int rows = statement.executeUpdate();
             return rows > 0;
+
         } catch (SQLException e) {
             System.err.println("Erreur dans ajouterCandidat : " + e.getMessage());
             return false;
@@ -40,9 +40,7 @@ public class CandidatDAO {
     }
 
     /**
-     * Récupère tous les candidats de la base de données
-     * @return Une liste de candidats
-     * @throws SQLException
+     * Récupère tous les candidats depuis la base.
      */
     public List<Candidat> obtenirTousLesCandidats() throws SQLException {
         List<Candidat> candidats = new ArrayList<>();
@@ -50,145 +48,40 @@ public class CandidatDAO {
 
         try (Connection connection = JDBCConnection.connect();
              PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
+             ResultSet rs = statement.executeQuery()) {
 
-            while (resultSet.next()) {
+            while (rs.next()) {
                 Candidat candidat = new Candidat(
-                        resultSet.getInt("id"),
-                        resultSet.getString("nom"),
-                        resultSet.getString("email"),
-                        resultSet.getString("motDePasse"),
-                        resultSet.getString("competences"),
-                        resultSet.getString("experience"),
-                        resultSet.getBoolean("sexe"),
-                        resultSet.getString("region"),
-                        resultSet.getString("trancheAge")
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("email"),
+                        rs.getString("motDePasse"),
+                        rs.getString("competences"),
+                        rs.getString("experience"),
+                        rs.getBoolean("sexe"),
+                        rs.getString("region"),
+                        rs.getString("trancheAge")
                 );
                 candidats.add(candidat);
             }
         }
+
         return candidats;
     }
 
     /**
-     * Authentifie un candidat
-     * @param email L'email du candidat
-     * @param password Le mot de passe du candidat
-     * @return Un objet Candidat si l'authentification réussit, null sinon
+     * Authentifie un candidat via email + mot de passe.
      */
     public static Candidat auth(String email, String password) {
-        try (Connection conn = JDBCConnection.connect()) {
-            String sql = "SELECT * FROM Candidat WHERE email = ? AND motDePasse = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, email);
-                stmt.setString(2, password);
+        String sql = "SELECT * FROM Candidat WHERE email = ? AND motDePasse = ?";
 
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        return new Candidat(
-                                rs.getInt("id"),
-                                rs.getString("nom"),
-                                rs.getString("email"),
-                                rs.getString("motDePasse"),
-                                rs.getString("competences"),
-                                rs.getString("experience"),
-                                rs.getBoolean("sexe"),
-                                rs.getString("region"),
-                                rs.getString("trancheAge")
-                        );
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Erreur dans CandidatDAO.auth : " + e.getMessage());
-        }
-        return null;
-    }
-
-    /**
-     * Statistique : nombre de candidats par genre (homme/femme)
-     */
-    public Map<String, Integer> getNombreCandidatsParGenre() {
-        Map<String, Integer> stats = new HashMap<>();
-        String query = "SELECT sexe, COUNT(*) as total FROM Candidat GROUP BY sexe";
-
-        try (Connection connection = JDBCConnection.connect();
-             PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet rs = statement.executeQuery()) {
-
-            while (rs.next()) {
-                String genre = rs.getBoolean("sexe") ? "Homme" : "Femme";
-                stats.put(genre, rs.getInt("total"));
-            }
-        } catch (SQLException e) {
-            System.err.println("Erreur statistiques genre : " + e.getMessage());
-        }
-        return stats;
-    }
-
-    /**
-     * Statistique : nombre de candidats par tranche d'âge
-     */
-    public Map<String, Integer> getNombreCandidatsParTrancheAge() {
-        Map<String, Integer> stats = new HashMap<>();
-        String query = "SELECT trancheAge, COUNT(*) as total FROM Candidat GROUP BY trancheAge";
-
-        try (Connection connection = JDBCConnection.connect();
-             PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet rs = statement.executeQuery()) {
-
-            while (rs.next()) {
-                stats.put(rs.getString("trancheAge"), rs.getInt("total"));
-            }
-        } catch (SQLException e) {
-            System.err.println("Erreur statistiques tranche d'âge : " + e.getMessage());
-        }
-        return stats;
-    }
-
-    /**
-     * Statistique : nombre de candidats par région
-     */
-    public Map<String, Integer> getNombreCandidatsParRegion() {
-        Map<String, Integer> stats = new HashMap<>();
-        String query = "SELECT region, COUNT(*) as total FROM Candidat GROUP BY region";
-
-        try (Connection connection = JDBCConnection.connect();
-             PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet rs = statement.executeQuery()) {
-
-            while (rs.next()) {
-                stats.put(rs.getString("region"), rs.getInt("total"));
-            }
-        } catch (SQLException e) {
-            System.err.println("Erreur statistiques région : " + e.getMessage());
-        }
-        return stats;
-    }
-
-    public void modifierCandidat(Candidat candidat) {
-        String query = "UPDATE candidat SET nom = ?, motDePasse = ?, competences = ?, experience = ?, sexe = ?, region = ?, trancheAge = ? WHERE id = ?";
         try (Connection conn = JDBCConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, candidat.getNom());
-            stmt.setString(2, candidat.getMotDePasse());
-            stmt.setString(3, candidat.getCompetences());
-            stmt.setString(4, candidat.getExperience());
-            stmt.setBoolean(5, candidat.getSexe());
-            stmt.setString(6, candidat.getRegion());
-            stmt.setString(7, candidat.getTrancheAge());
-            stmt.setInt(8, candidat.getId());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public static Candidat getById(int id) {
-        try (Connection conn = JDBCConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM candidat WHERE id = ?")) {
-            stmt.setInt(1, id);
+            stmt.setString(1, email);
+            stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
                 return new Candidat(
                         rs.getInt("id"),
@@ -202,9 +95,136 @@ public class CandidatDAO {
                         rs.getString("trancheAge")
                 );
             }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur dans CandidatDAO.auth : " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    /**
+     * Récupère un candidat par ID.
+     */
+    public static Candidat getById(int id) {
+        String sql = "SELECT * FROM Candidat WHERE id = ?";
+
+        try (Connection conn = JDBCConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Candidat(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("email"),
+                        rs.getString("motDePasse"),
+                        rs.getString("competences"),
+                        rs.getString("experience"),
+                        rs.getBoolean("sexe"),
+                        rs.getString("region"),
+                        rs.getString("trancheAge")
+                );
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return null;
+    }
+
+    /**
+     * Met à jour les infos d’un candidat.
+     */
+    public void modifierCandidat(Candidat candidat) {
+        String query = "UPDATE Candidat SET nom = ?, motDePasse = ?, competences = ?, experience = ?, sexe = ?, region = ?, trancheAge = ? WHERE id = ?";
+
+        try (Connection conn = JDBCConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, candidat.getNom());
+            stmt.setString(2, candidat.getMotDePasse());
+            stmt.setString(3, candidat.getCompetences());
+            stmt.setString(4, candidat.getExperience());
+            stmt.setBoolean(5, candidat.getSexe());
+            stmt.setString(6, candidat.getRegion());
+            stmt.setString(7, candidat.getTrancheAge());
+            stmt.setInt(8, candidat.getId());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Statistique : nombre de candidats par genre.
+     */
+    public static Map<String, Integer> getNombreCandidatsParGenre() {
+        Map<String, Integer> stats = new HashMap<>();
+        String query = "SELECT sexe, COUNT(*) AS total FROM Candidat GROUP BY sexe";
+
+        try (Connection connection = JDBCConnection.connect();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                String genre = rs.getBoolean("sexe") ? "Homme" : "Femme";
+                stats.put(genre, rs.getInt("total"));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur statistiques genre : " + e.getMessage());
+        }
+
+        return stats;
+    }
+
+    /**
+     * Statistique : nombre de candidats par tranche d’âge.
+     */
+    public static Map<String, Integer> getNombreCandidatsParTrancheAge() {
+        Map<String, Integer> stats = new HashMap<>();
+        String query = "SELECT trancheAge, COUNT(*) AS total FROM Candidat GROUP BY trancheAge";
+
+        try (Connection connection = JDBCConnection.connect();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                stats.put(rs.getString("trancheAge"), rs.getInt("total"));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur statistiques tranche d'âge : " + e.getMessage());
+        }
+
+        return stats;
+    }
+
+    /**
+     * Statistique : nombre de candidats par région.
+     */
+    public static Map<String, Integer> getNombreCandidatsParRegion() {
+        Map<String, Integer> stats = new HashMap<>();
+        String query = "SELECT region, COUNT(*) AS total FROM Candidat GROUP BY region";
+
+        try (Connection connection = JDBCConnection.connect();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                stats.put(rs.getString("region"), rs.getInt("total"));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur statistiques région : " + e.getMessage());
+        }
+
+        return stats;
     }
 }

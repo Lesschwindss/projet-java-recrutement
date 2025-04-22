@@ -21,15 +21,15 @@ public class ReportingView extends JPanel {
         CandidatDAO dao = new CandidatDAO();
 
         // Graphique 1 : Genre
-        Map<String, Integer> statsGenre = dao.getNombreCandidatsParGenre();
+        Map<String, Integer> statsGenre = CandidatDAO.getNombreCandidatsParGenre();
         graphPanel.add(creerPanelGraphiqueCirculaire(statsGenre, "Répartition par Genre"));
 
         // Graphique 2 : Tranche d’âge
-        Map<String, Integer> statsAge = dao.getNombreCandidatsParTrancheAge();
+        Map<String, Integer> statsAge = CandidatDAO.getNombreCandidatsParTrancheAge();
         graphPanel.add(creerPanelGraphiqueCirculaire(statsAge, "Répartition par Tranche d'Âge"));
 
         // Graphique 3 : Région
-        Map<String, Integer> statsRegion = dao.getNombreCandidatsParRegion();
+        Map<String, Integer> statsRegion = CandidatDAO.getNombreCandidatsParRegion();
         graphPanel.add(creerPanelGraphiqueCirculaire(statsRegion, "Répartition par Région"));
         add(graphPanel, BorderLayout.CENTER);
 

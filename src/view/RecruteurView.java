@@ -21,7 +21,7 @@ public class RecruteurView extends JPanel {
         btnSupprimerOffre.addActionListener(e -> RecruteurController.supprimerOffre());
         btnVoirStats.addActionListener(e -> RecruteurController.voirStatistiques());
 
-        // ➕ Action : ouvrir la vue des candidatures
+
         btnVoirCandidatures.addActionListener(e -> {
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
             frame.setContentPane(new CandidaturesView());
@@ -34,7 +34,7 @@ public class RecruteurView extends JPanel {
         add(btnModifierOffre);
         add(btnSupprimerOffre);
         add(btnVoirStats);
-        add(btnVoirCandidatures); // 👈 On l’ajoute ici
+        add(btnVoirCandidatures); 
         add(btnDeconnexion);
     }
 }

@@ -1,6 +1,7 @@
 package view;
 
 import dao.CandidatDAO;
+import dao.CandidatureDAO;
 import model.Candidat;
 
 import javax.swing.*;
@@ -51,7 +52,32 @@ public class ProfilCandidatView extends JPanel {
 
         add(infoPanel, BorderLayout.CENTER);
 
-        // Bouton retour
+        // Panel des boutons
+        JPanel bottomPanel = new JPanel();
+
+        // Bouton "Voir la lettre de motivation"
+        JButton btnVoirLettre = new JButton("Voir la lettre de motivation");
+        btnVoirLettre.addActionListener(e -> {
+            if (candidat != null) {
+                String lettreMotivation = CandidatureDAO.getLettreMotivationParCandidatId(candidat.getId());
+                if (lettreMotivation != null && !lettreMotivation.isEmpty()) {
+                    JTextArea textArea = new JTextArea(lettreMotivation);
+                    textArea.setEditable(false);
+                    textArea.setLineWrap(true);
+                    textArea.setWrapStyleWord(true);
+                    JScrollPane scrollPane = new JScrollPane(textArea);
+                    scrollPane.setPreferredSize(new Dimension(500, 400));
+
+                    JOptionPane.showMessageDialog(this, scrollPane,
+                            "Lettre de motivation de " + candidat.getNom(),
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Aucune lettre de motivation trouvée.");
+                }
+            }
+        });
+
+        // Bouton Retour
         JButton btnRetour = new JButton("Retour");
         btnRetour.addActionListener(e -> {
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
@@ -59,7 +85,7 @@ public class ProfilCandidatView extends JPanel {
             frame.revalidate();
         });
 
-        JPanel bottomPanel = new JPanel();
+        bottomPanel.add(btnVoirLettre);
         bottomPanel.add(btnRetour);
         add(bottomPanel, BorderLayout.SOUTH);
     }
